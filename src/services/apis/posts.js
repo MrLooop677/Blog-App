@@ -2,12 +2,10 @@ import { axiosInstance } from "./baseapi";
 
 export const getAllPosts = async (numPage) => {
   const posts = await axiosInstance.get(`/posts?_page=${numPage}`);
-
   return posts;
 };
 export const getAllUsers = async (numPage) => {
   const users = await axiosInstance.get(`/users`);
-
   return users;
 };
 export const getDetailPost = async (id) => {

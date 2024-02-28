@@ -7,6 +7,7 @@ import Pagination from "../components/pagination/pagination.component";
 import { Loader } from "../components/loader/loader";
 import RequestError from "../components/request-error/request-error.component";
 import SearchInput from "../components/search/search.component";
+import { RiRefreshLine } from "react-icons/ri";
 
 export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,11 +18,16 @@ export default function HomePage() {
   const handlePageChange = useCallback((pageNumber) => {
     setCurrentPage(pageNumber);
   }, []);
+  const getUsersAndPosts = useCallback(() => {
+    dispatch(getPosts(currentPage));
+  }, [currentPage, dispatch]);
 
   useEffect(() => {
-    dispatch(getPosts(currentPage));
+    getUsersAndPosts();
+  }, [getUsersAndPosts]);
+  useEffect(() => {
     dispatch(getUsers());
-  }, [dispatch, currentPage]);
+  }, []);
   const renderContent = () => {
     if (loader) return <Loader />;
     if (error) return <RequestError error={error} />;
@@ -40,6 +46,14 @@ export default function HomePage() {
       </div>
       <div className="max-w-md w-full m-auto mt-10">
         <SearchInput />
+      </div>
+
+      <div className="absolute top-1/4 right-40 group">
+        <RiRefreshLine
+          className="cursor-pointer size-8 text-blue-500"
+          title="Refresh page"
+          onClick={getUsersAndPosts}
+        />
       </div>
       {renderContent()}
       {paginate?.pages > 0 && (
